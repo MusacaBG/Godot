@@ -1,0 +1,33 @@
+extends Node2D
+
+onready var bullet = preload("res://Scenes/Bullet.tscn")
+var b
+
+func _physics_process(delta):
+	if $RayCast2D.is_colliding():
+		$Exclamation.visible = true
+		if $Timer.is_stopped():
+			$Timer.start()
+	else:
+		$Exclamation.visible = false
+		if not $Timer.is_stopped():
+			$Timer.stop()
+
+func _on_Area2D_area_entered(area):
+	if 'Bullet' in area.get_parent().name:
+		hited(area)
+
+func hited(a):
+	a.get_parent().queue_free()
+	$LifeBar.value -= 20
+	if $LifeBar.value <= 0:
+		queue_free()
+
+func shoot(dir):
+		b = bullet.instance()
+		b.init(dir, 800)
+		get_parent().add_child(b)
+		b.global_position = $Position2D.global_position
+
+func _on_Timer_timeout():
+	shoot(true)
