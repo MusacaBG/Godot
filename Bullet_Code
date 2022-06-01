@@ -1,0 +1,25 @@
+extends Sprite
+
+var direction = false
+var start_position = 0
+var lifespan = 700
+
+func init(d, ls = 700):
+	direction = d
+	lifespan = ls
+
+func _ready():
+	scale = Vector2(.3, .3)
+
+func _physics_process(delta):
+	if start_position == 0:
+		start_position = position.x
+	if direction:
+		if position.x < start_position - lifespan:
+			queue_free()
+		else:
+			position.x -= 11
+	else:
+		if position.x > start_position - lifespan:
+			queue_free()
+		else: position.x += 3
